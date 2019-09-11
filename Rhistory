@@ -1,0 +1,512 @@
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)]))
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)]))
+AREA <- append(AREA,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)]))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)]))
+MES <- append(MES,as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)]))
+AREA <- append(AREA,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)]))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA)
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- sum(append(AREA,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- sum(append(AREA,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])
+as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1]
+as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1]
+sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)]))
+sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)]))
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+View(dataset)
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+View(dataset)
+library(foreign)
+#lista os dbf na pasta
+files <- list.files(pattern='.dbf')
+#cria lista vazia
+dados <- list()
+#lê todos os dbf e salva tabela em lista
+for(i in 1:length(files)){
+dados[[i]] <- read.dbf(files[i])
+}
+#verifica todos os nomes de colunas possiveis e determina as tres de interesse
+name_vector <- vector()
+for(i in 1:length(files)){
+name_vector <- append(name_vector,names(dados[[i]]))
+}
+ano <- unique(name_vector)[c(3,8,26)]
+mes <- unique(name_vector)[c(4,9,25)]
+area <- unique(name_vector)[c(5,10,11,16,18,22)]
+#confere se todas as tabelas possuem as tres colunas
+for (i in 1:length(files)) {
+print(paste0(i,'-',
+sum(names(dados[[i]])%in%ano)+
+sum(names(dados[[i]])%in%mes)+
+sum(names(dados[[i]])%in%area)
+))
+}
+#retira colunas duplicadas
+dados[[29]] <- dados[[29]][-8]
+dados[[30]] <- dados[[30]][-7]
+#repete conferencia
+for (i in 1:length(files)) {
+print(paste0(i,'-',
+sum(names(dados[[i]])%in%ano)+
+sum(names(dados[[i]])%in%mes)+
+sum(names(dados[[i]])%in%area)
+))
+}
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+View(dataset)
+i
+i=1
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+ANO
+MES
+i=2
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%area)])))
+MES
+dados[[i]]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+dados[[i]][,which(colnames(dados[[i]])%in%mes)]
+as.numeric(dados[[i]][,which(colnames(dados[[i]])%in%mes)])
+as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1]
+as.numeric(as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)]))
+MES <- append(MES,as.numeric(as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)]))[1])
+MES
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.numeric(as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)]))[1])
+AREA <- append(AREA,sum(as.numeric(as.character(dados[[i]][,which(colnames(dados[[i]])%in%area)]))))
+}
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(MES,"-",ANO))
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~MES)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA, color = ANO))
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA, color=ANO))
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+facet_wrap(~ANO)+
+theme_light()
+library(zoo)
+read.zoo(text = dataset$MES_ANO, FUN = as.yearmon
+)
+read.zoo(text = dataset$MES_ANO, FUN = as.yearmon)
+dataset$MES_ANO
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=as.character(paste(ANO,'-',MES)))
+read.zoo(text = dataset$MES_ANO, FUN = as.yearmon)
+dataset$MES_ANO
+read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon)
+MES
+MES
+MES[1]
+MES[2]
+MES[3]
+MES[4]
+MES[5]
+MES[6]
+MES[1]
+MES==1
+seq(1,10)
+seq(1,12)
+seq(1,12)
+which(MES%in%seq(1,12,1))
+match(MES%in%seq(1,12,1))
+match(MES%,seq(1,12,1))
+match(MES,seq(1,12,1))
+MES
+match(MES,seq(1,9,1))
+which(MES%in%seq(1,9,1))
+MES[which(MES%in%seq(1,9,1))]
+paste0(0,MES[which(MES%in%seq(1,9,1))])
+as.numeric(paste0(0,MES[which(MES%in%seq(1,9,1))]))
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(as.character(dados[[i]][,which(colnames(dados[[i]])%in%area)]))))
+}
+MES
+MES[which(MES%in%seq(1,9,1))] <- paste0(0,MES[which(MES%in%seq(1,9,1))])
+MES
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(ANO,'-',MES))
+dataset
+library(zoo)
+read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon)
+#juntar tabela em uma so
+ANO <- c()
+MES <- c()
+AREA <- c()
+for (i in 1:length(files)) {
+ANO <- append(ANO,as.character(dados[[i]][,which(colnames(dados[[i]])%in%ano)])[1])
+MES <- append(MES,as.character(dados[[i]][,which(colnames(dados[[i]])%in%mes)])[1])
+AREA <- append(AREA,sum(as.numeric(as.character(dados[[i]][,which(colnames(dados[[i]])%in%area)]))))
+}
+MES[which(MES%in%seq(1,9,1))] <- paste0(0,MES[which(MES%in%seq(1,9,1))])
+MES
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(ANO,'-',MES))
+library(zoo)
+read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon)
+read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon)
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(ANO,'-',MES))
+as.character(dataset$MES_ANO)
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(ANO,'-',MES,sep=""))
+dataset
+library(zoo)
+read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon)
+class(read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon))
+class(read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon))
+as.Date(read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon))
+as.Date(read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon))
+read.zoo(text = as.character(dataset$MES_ANO), FUN = as.yearmon)
+as.yearmon(as.character(dataset$MES_ANO))
+as.Date(as.yearmon(as.character(dataset$MES_ANO)))
+dataset$MES_ANO <- as.Date(as.yearmon(as.character(dataset$MES_ANO)))
+dataset$MES_ANO
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = (0,0))+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0))+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '1 month')+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '3 months')+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months', labels = format('%Y-%m'))+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months', labels = date_format('%Y-%m'))+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months', labels = format.Date('%Y%m'))+
+theme_light()
+dataset$MES_ANO <- as.Date(as.yearmon(as.character(dataset$MES_ANO)),format="%Y-%m-%d")
+dataset$MES_ANO
+dataset$MES_ANO <- as.Date(as.yearmon(as.character(dataset$MES_ANO)),format="%Y-%m-%d")
+dataset$MES_ANO <- as.Date(as.yearmon(as.character(dataset$MES_ANO)),format="%Y-%m-%d")
+dataset$MES_ANO
+dataset$MES_ANO <- as.Date(as.yearmon(as.character(dataset$MES_ANO)))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months', labels = format.Date('%Y%m'))+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA, color=ANO))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+install.packages('ggpmisc')
+install.packages("ggpmisc")
+install.packages("ggpmisc")
+install.packages("ggpmisc")
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+stat_
+library(ggplot2)
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+stat_
+install.packages("ggplot2")
+install.packages("ggplot2")
+library(ggplot2)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+stat_
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '61 month')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '1 month')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '1 month')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO, nrow = 12)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '1 month')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO, nrow = 12)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '1 month')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO, nrow = 12,)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1)+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO, nrow = 12,)
+ggplot(dataset)+
+geom_line(aes(x=MES,y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO, nrow = 12)
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(MES),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO, nrow = 12)
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(MES),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))+
+facet_wrap(~ANO)
+months(1:12)
+months(1:12)
+monthsMES
+months(dataset$MES)
+months(as.character(dataset$MES))
+months(as.numeric(dataset$MES))
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(MES),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+theme(axis.text.x = element_text(angle=90, hjust = 1))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(MES),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+theme(axis.text.x = element_text(angle=90, hjust = 1))+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(MES),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+facet_wrap(~ANO)
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()+
+theme(axis.text.x = element_text(angle=45, hjust = 1))
+ggplot(dataset)+
+geom_line(aes(x=MES_ANO,y=AREA))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=ANO,y=AREA, type = MES))+
+scale_x_date(expand = c(0,0), breaks = '6 months')+
+theme_light()
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(ANO),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = 1:12)+
+theme_light()+
+facet_wrap(~MES)
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(ANO),y=AREA))+
+scale_x_continuous(expand = c(0,0))+
+theme_light()+
+facet_wrap(~MES)
+ggplot(dataset)+
+geom_line(aes(x=as.numeric(ANO),y=AREA))+
+scale_x_continuous(expand = c(0,0), breaks = c(1,2,3,4,5,6,7,8,9,10,11,12))+
+theme_light()+
+facet_wrap(~MES)
