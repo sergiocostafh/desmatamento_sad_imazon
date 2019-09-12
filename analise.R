@@ -46,39 +46,53 @@ AREA <- append(AREA,sum(as.numeric(as.character(dados[[i]][,which(colnames(dados
 }
 MES[which(MES%in%seq(1,9,1))] <- paste0(0,MES[which(MES%in%seq(1,9,1))])
 
-dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,MES_ANO=paste(ANO,'-',MES,sep=""))
+dataset <- data.frame(ANO=ANO,MES=MES,AREA=AREA,
+                      MES_ANO=as.Date(paste(ANO,'-',MES,'-01', sep='')))
 
-library(zoo)
-dataset$MES_ANO <- as.Date(as.yearmon(as.character(dataset$MES_ANO)))
+library(ggplot2)
+
+ggplot(dataset,aes(x=MES_ANO,y=AREA))+
+  geom_line()+
+  scale_x_date(expand = c(0.05,0.05), breaks = '6 months',
+               date_labels = '%b', minor_breaks = NULL)+
+  scale_y_continuous(expand = c(0,0), limits = c(0,1500),
+                     breaks = seq(0,1500,100))+
+  xlab(NULL)+
+  ylab('Área (km²)')+
+  theme_light()+
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+
+ggplot(dataset,aes(x=MES_ANO,y=AREA))+
+  geom_line()+
+  scale_x_date(expand = c(0.05,0.05), breaks = '6 months',
+               date_labels = '%b', minor_breaks = NULL)+
+  scale_y_continuous(expand = c(0,0), limits = c(0,1500),
+                     breaks = seq(0,1500,100))+
+  xlab(NULL)+
+  ylab('Área (km²)')+
+  theme_light()+
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+
+
 library(lubridate)
 dataset$SEMESTRE <- semester(dataset$MES_ANO)
 dataset$SEMESTRE_ANO <- semester(dataset$MES_ANO, with_year = TRUE)
 
-dataset$AREA_ACUM_SEM <- dataset$AREA
-for(i in 2:nrow(dataset)){
-  if(dataset$SEMESTRE_ANO[i]==dataset$SEMESTRE_ANO[i-1]){
-  dataset$AREA_ACUM_SEM[i] <- dataset$AREA[i]+dataset$AREA_ACUM_SEM[i-1]
-  }
-  else{dataset$AREA_ACUM_SEM[i] <- dataset$AREA[i]}
+
+dataset$AREA_ACUM_1ano <- dataset$AREA
+for(i in 12:nrow(dataset)){
+    dataset$AREA_ACUM_1ano[i] <- sum(dataset$AREA[i-c(0:11)])
 }
 
 
-
-library(ggplot2)
-
 ggplot(dataset)+
-  geom_line(aes(x=MES_ANO,y=AREA))+
-  scale_x_date(breaks = '6 months')+
+  geom_line(aes(x=MES_ANO,y=AREA_ACUM_1ano))+
+  scale_x_date(expand = c(0.05,0.05), breaks = '6 months',
+               date_labels = '%b %Y', minor_breaks = NULL)+
   theme_light()+
   theme(axis.text.x = element_text(angle=45, hjust = 1))
-
-ggplot(subset(dataset, dataset$ANO%in%c(2015,2016,2017,2018,2019)))+
-  geom_line(aes(x=as.numeric(MES),y=AREA_ACUM_SEM))+
-  facet_grid(ANO~SEMESTRE, scales = 'free_x')
-#  scale_x_discrete(labels = c())
-  theme_light()+
-  facet_grid(SEMESTRE~ANO)
-
 
 
 library(xlsx)
