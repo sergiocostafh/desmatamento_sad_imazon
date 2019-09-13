@@ -1,0 +1,47 @@
+---
+title: "Desmatamento na Amazônia - Análise de dados da Imazon"
+author: "Sérgio Costa"
+date: "13/09/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Introdução
+Recentemente diversas notícias foram divulgadas nos principais jornais do Brasil e do Mundo alertando para um possível aumento nas taxas de desmatamento na Amazônia. Os dados que embasam esta afirmação foram divulgados pelo INPE, e o tema gerou grande polêmica envolvendo o atual presidente Jair Bolsonaro, o Ministro do Meio Ambiente Ricardo Salles e o agora ex-diretor do INPE Ricardo Galvão. Os governistas questionaram a veracidade das informações, o que incendiou a discussão e culminou na demissão de Galvão.  
+Não somente o INPE, mas outras insituições que monitoram a perda de cobertura vegetal na Amazônia brasileira dispararam alertas para a elevação nas taxas de desmatamento, como a Imazon e a Nasa, e a discussão sobre o assunto prosseguiu para além dos limites do território brasileiro.  
+Um segundo clímax em torno do tema se deu entre Jair Bolsonaro e o atual presidente da França Emmanuel Macron que, após declarações em que demonstrava profunda preocupação com este tema, convocou representantes dos países membros do G7 para uma reunião e colocou sob ameaça o recente acordo comercial entre o Mercosul e a União Européia.
+
+## O que dizem os dados do INPE
+Os dados divulgados no início de agosto pelo INPE a partir do sistema DETER indicou uma alta de 278% em relação a julho de 2018, somando 2.254 km² de alertas [1]. Considerando o acumulado no período de agosto de 2018 a julho de 2019 os alertas indicaram um aumento de 50% em relação ao mesmo período do ano anterior (agosto de 2017 a julho de 2018).
+
+Como aqui busco defender o conceito de análise replicável, fui atrás dos dados no site do INPE para poder gerar minhas próprias análises e observações sobre o assunto. Apesar do excelente painel de análises desenvolvido na plataforma [TerraBrasilis](http://terrabrasilis.dpi.inpe.br/), os dados do Deter são disponibilizados apenas para o período de 1 ano, o que impede que possamos comparar os dados recentes com os obtidos em anos anteriores.
+
+## Sistema SAD do Imazon e a busca por dados históricos mais detalhados
+O Imazon é uma instituição de pesquisas sem fins lucrativos, qualificada pelo Ministério da Justiça, e que realiza o monitoramento da Amazônia Legal pelo uso de imagens de satélites que reportam mensalmente o ritmo do desmatamento e da degradação florestal na região por meio do Sistema de Alerta de Desmatamento (SAD).
+No site do [ImazonGeo](https://imazongeo.org.br/#/) estão disponíveis os dados mensais de desmatamento e degradação florestal desde janeiro de 2008. É importante salientar que o SAD somente detecta áreas de desmatamento superiores a 1 hectare e que apesar ambos monitorarem o desmatamento na Amazônia, os dados do SAD não são comparáveis aos do DETER, devido a diferenças metodológicas. Maiores informações acerca dos métodos empregados pelo SAD podem ser obtidos [aqui](https://imazon.org.br/publicacoes/faq-sad/).
+
+## Analisando os dados do SAD
+Os dados de desmatamento desponibilizados pelo SAD estão em formato *shapefile* e foi necessário algum trabalho computacional para juntar tudo em uma tabela única, já que os arquivos são separados mês a mês. Fiz o download de todos os meses compreendidos entre agosto de 2009 e julho de 2019, totalizando 10 anos de análise ou 120 meses. Por sorte temos o R, e todo o procedimento desenvolvido para compilação dos dados em uma tabela única está disponível em meu repositório pessoal no GitHub.
+
+Dada toda esta introdução, vamos por a mão na massa. Mas não sem antes recomendar que você clique **aqui** e entenda por que apresento os scripts de análises ao longo das postagens e a importância das análises replicáveis.
+
+## Referências
+[1] http://www.observatoriodoclima.eco.br/desmatamento-subiu-50-em-2019-indicam-alertas-inpe/
+
+
+6833/4572
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
