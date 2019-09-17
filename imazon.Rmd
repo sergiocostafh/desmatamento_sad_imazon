@@ -2,14 +2,16 @@
 title: "Desmatamento na Amazônia - Análise de dados da Imazon"
 author: "Sérgio Costa"
 date: "13/09/2019"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Introdução
-Recentemente diversas notícias foram divulgadas nos principais jornais do Brasil e do Mundo alertando para um possível aumento nas taxas de desmatamento na Amazônia. Os dados que embasam esta afirmação foram divulgados pelo INPE, e o tema gerou grande polêmica envolvendo o atual presidente Jair Bolsonaro, o Ministro do Meio Ambiente Ricardo Salles e o agora ex-diretor do INPE Ricardo Galvão. Os governistas questionaram a veracidade das informações, o que incendiou a discussão e culminou na demissão de Galvão.  
+Recentemente os principais jornais do Brasil e do Mundo noticiaram um possível aumento nas taxas de desmatamento na Amazônia, a partir de dados divulgados pelo INPE (Instituto Nacional de Pesquisas Espaciais). O tema gerou grande polêmica envolvendo o atual presidente Jair Bolsonaro, o Ministro do Meio Ambiente Ricardo Salles e o agora ex-diretor do órgão Ricardo Galvão. Os governistas questionaram a veracidade das informações, incendiando a discussão que culminou na demissão de Galvão.  
 Não somente o INPE, mas outras insituições que monitoram a perda de cobertura vegetal na Amazônia brasileira dispararam alertas para a elevação nas taxas de desmatamento, como a Imazon e a Nasa, e a discussão sobre o assunto prosseguiu para além dos limites do território brasileiro.  
 Um segundo clímax em torno do tema se deu entre Jair Bolsonaro e o atual presidente da França Emmanuel Macron que, após declarações em que demonstrava profunda preocupação com este tema, convocou representantes dos países membros do G7 para uma reunião e colocou sob ameaça o recente acordo comercial entre o Mercosul e a União Européia.
 
@@ -18,30 +20,109 @@ Os dados divulgados no início de agosto pelo INPE a partir do sistema DETER ind
 
 Como aqui busco defender o conceito de análise replicável, fui atrás dos dados no site do INPE para poder gerar minhas próprias análises e observações sobre o assunto. Apesar do excelente painel de análises desenvolvido na plataforma [TerraBrasilis](http://terrabrasilis.dpi.inpe.br/), os dados do Deter são disponibilizados apenas para o período de 1 ano, o que impede que possamos comparar os dados recentes com os obtidos em anos anteriores.
 
-## Sistema SAD do Imazon e a busca por dados históricos mais detalhados
+Quero destacar também uma interessante análise da série anual de dados de desmatamento dos sistemas PRODES e DETER do INPE, publicada no site [Polling Data](http://www.pollingdata.com.br/2019/09/uma-analise-imparcial-dos-dados-do-desmatamento-da-amazonia/)
+
+## Sistema SAD do Imazon
 O Imazon é uma instituição de pesquisas sem fins lucrativos, qualificada pelo Ministério da Justiça, e que realiza o monitoramento da Amazônia Legal pelo uso de imagens de satélites que reportam mensalmente o ritmo do desmatamento e da degradação florestal na região por meio do Sistema de Alerta de Desmatamento (SAD).
-No site do [ImazonGeo](https://imazongeo.org.br/#/) estão disponíveis os dados mensais de desmatamento e degradação florestal desde janeiro de 2008. É importante salientar que o SAD somente detecta áreas de desmatamento superiores a 1 hectare e que apesar ambos monitorarem o desmatamento na Amazônia, os dados do SAD não são comparáveis aos do DETER, devido a diferenças metodológicas. Maiores informações acerca dos métodos empregados pelo SAD podem ser obtidos [aqui](https://imazon.org.br/publicacoes/faq-sad/).
+No site do [ImazonGeo](https://imazongeo.org.br/#/) estão disponíveis os dados mensais de desmatamento e degradação florestal desde janeiro de 2008. É importante salientar que o SAD somente detecta áreas de desmatamento superiores a 1 hectare e que apesar ambos monitorarem o desmatamento na Amazônia, os dados do SAD não são comparáveis aos do DETER, devido a diferenças metodológicas. As detecções do SAD são realizadas somente para áreas de floresta primária, ou seja, florestas que nunca sofreram perturbações significativas, enquanto o Deter é um sistema de alertas que avalia alterações na cobertura florestal, servindo de suporte para órgãos de fiscalização ambiental. Maiores informações sobre o método empregado pelo SAD pode ser obtidos [aqui](https://imazon.org.br/publicacoes/faq-sad/).
 
 ## Analisando os dados do SAD
-Os dados de desmatamento desponibilizados pelo SAD estão em formato *shapefile* e foi necessário algum trabalho computacional para juntar tudo em uma tabela única, já que os arquivos são separados mês a mês. Fiz o download de todos os meses compreendidos entre agosto de 2009 e julho de 2019, totalizando 10 anos de análise ou 120 meses. Por sorte temos o R, e todo o procedimento desenvolvido para compilação dos dados em uma tabela única está disponível em meu repositório pessoal no GitHub.
+Os dados de desmatamento desponibilizados pelo SAD estão em formato *shapefile* e foi necessário algum trabalho computacional para juntar tudo em uma tabela única, já que os arquivos são separados mês a mês. Fiz o download de todos os meses compreendidos entre agosto de 2009 e julho de 2019, totalizando 10 anos de análise ou 120 meses. Por sorte temos o R, e todo o procedimento desenvolvido para compilação dos dados em uma tabela única está disponível em [meu repositório pessoal no GitHub](https://github.com/sergiocostafh/desmatamento_sad_imazon).
 
 Dada toda esta introdução, vamos por a mão na massa. Mas não sem antes recomendar que você clique **aqui** e entenda por que apresento os scripts de análises ao longo das postagens e a importância das análises replicáveis.
+  
+Ao visualizar a série histórica dos dados mensais de desmatamento mapeado pelo SAD, alguns padrões já nos saltam aos olhos. O primeiro que podemos elencar é que o mês de julho de 2019 registrou o maior acúmulo de área desmatada em um mês para toda a série histórica, e isso já explica boa parte da discussão em torno do assunto levantada nas últimas semanas. Outro ponto importante é que há uma clara tendência na formação de picos ascendentes na taxa de desmatamento desde 2012.  Os picos ocorrem geralmente entre os meses de junho e julho, que coincide com o período de menor pluviosidade na região [2]. 
+
+```{r, message=FALSE, warning=FALSE, fig.align='center',fig.width=8, warning=FALSE}
+# Importar a base de dados
+dados_desmatamento <- read.table('dados_sad.txt')
+# Criar coluna Mês - Ano
+dados_desmatamento$`MES ANO`=as.Date(paste(dados_desmatamento$ANO,'-',dados_desmatamento$MES,'-01', sep=''))
+# Carregar pacotes necessário para geração dos gráficos
+library(ggplot2)
+library(plotly)
+# Plotar série histórica de desmatamento mensal
+ggplotly(ggplot(dados_desmatamento,aes(x=`MES ANO`,y=AREA))+
+  geom_line()+
+    scale_x_date(expand = c(0.05,0.05), breaks = 'year',
+                 date_labels = '%Y', minor_breaks = NULL)+
+    scale_y_continuous(expand = c(0,0), limits = c(0,1500),
+                     breaks = seq(0,1500,100))+
+  xlab(NULL)+
+  ylab('Desmatamento detectado (km²)')+
+  ggtitle('Área desmatada na Amazônia Legal - Acumulado mensal')+
+  theme_light()+
+  annotate(geom='text', size = 3,
+           x=dados_desmatamento$`MES ANO`[c(1,13,21,39,49,59,72,82,95,106,119)],
+           y=dados_desmatamento$AREA[c(1,13,21,39,49,59,72,82,95,106,119)]+25,
+           label=format.Date(dados_desmatamento$`MES ANO`[c(1,13,21,39,49,59,72,82,95,106,119)],'%b %Y'))) %>%
+  config(displayModeBar = F) %>%
+  layout(xaxis=list(fixedrange=TRUE, showspikes = TRUE)) %>%
+  layout(yaxis=list(fixedrange=TRUE, showspikes = TRUE))
+
+# Comparação julho 2019/julho 2018
+# round(1-dados_desmatamento$AREA[119]/dados_desmatamento$AREA[107], 3)*-1
+# Comparação junho 2019/julho 2018
+# round(1-dados_desmatamento$AREA[118]/dados_desmatamento$AREA[106], 3)*-1
+```
+  
+Se tomarmos por base a área desmatada no mês de julho de 2018 (758 km²) e compararmos ao mesmo mês do ano atual (1.287 km²), constataremos um aumento de 70% no ano de 2019. A interpretação deste resultado exige cuidado pois pode gerar interpretações tendenciosas quando avaliado isoladamente. Um exemplo disso, é que se aplicarmos a mesma análise ao mês de junho, em que a área desmatada somou 1167 km² e 801 km² para 2018 e 2019 respectivamente, o resultado será uma redução de 31,4%.
+O fato é que para podermos interpretar os dados de desmatamento de maneira mais consistente, precisamos avaliar o acúmulo de área desmatada em períodos maiores.
+
+Fica clara a tendência de alta no desmatamento quando analisamos a redução de cobertura vegetal acumulada para o período de 12 meses. A curva para a área acumulada em 6 meses deixa claro que esta alta é resultante de picos cada vez maiores no período compreendido entre maio e outubro, já que os vales ou fundos (período entre novembro e abril) vêm apresentando, desde 2015, valores similares de área acumulada.
+
+Na série do desmatamento acumulado em 6 meses há pouca diferença entre os anos de 2018 e 2019 para o período de feveiro a julho. Considerando o período de agosto a julho, temos um aumento de 18% em 2019. Considerando que a série histórica de desmatamento detectado durante o período de 12 meses tem seu pico no acumulado entre fevereiro de 2018 e janeiro de 2019, as análises realizadas sugerem que para o mesmo período de 2019-2020 a redução da cobertura florestal amazônica será similar ou mesmo maior, registrando uma nova máxima. 
+
+```{r, fig.align='center',fig.width=8, warning=FALSE}
+# Calcular área desmatada acumulado no período de 12 meses
+dados_desmatamento$`AREA ACUMULADA EM 1 ANO` <- NA
+for(i in 12:nrow(dados_desmatamento)){
+    dados_desmatamento$`AREA ACUMULADA EM 1 ANO`[i] <- sum(dados_desmatamento$AREA[i-c(0:11)])
+    }
+# Calcular área desmatada acumulado no período de 6 meses
+dados_desmatamento$`AREA ACUMULADA EM 6 MESES` <- NA
+for(i in 6:nrow(dados_desmatamento)){
+  dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[i] <- sum(dados_desmatamento$AREA[i-c(0:5)])
+  }
+# Plotar gráfico
+ggplotly(ggplot(dados_desmatamento)+
+  geom_line(aes(x=`MES ANO`,y=`AREA ACUMULADA EM 1 ANO`, linetype = 'Acumulado em 1 ano'))+
+  geom_line(aes(x=`MES ANO`,y=`AREA ACUMULADA EM 6 MESES`, linetype = 'Acumulado em 6 meses'))+
+    scale_x_date(expand = c(0.05,0.05), breaks = 'year',
+                 date_labels = '%Y', minor_breaks = NULL)+
+  scale_linetype_manual(name = NULL ,values = c('solid','dashed'))+
+  xlab(NULL)+
+  ylab('Desmatamento detectado (km²)')+
+  ggtitle('Área desmatada na Amazônia Legal - Acumulado anual e semestral')+
+  annotate(geom='text', size = 3,
+         x=dados_desmatamento$`MES ANO`[c(107,119,107,119)],
+         y=c(dados_desmatamento$`AREA ACUMULADA EM 1 ANO`[c(107,119)],
+             dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[c(107,119)])+150,
+         label=format.Date(dados_desmatamento$`MES ANO`[c(107,119,107,119)],'%b %Y'))+
+  annotate(geom='point', size = 1,
+         x=dados_desmatamento$`MES ANO`[c(107,119,107,119)],
+         y=c(dados_desmatamento$`AREA ACUMULADA EM 1 ANO`[c(107,119)],
+             dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[c(107,119)]))+
+  theme_light()+
+  theme(axis.text.x = element_text(angle=45, hjust = 1),
+        plot.title = element_text(hjust=0.5))) %>%
+  layout(legend = list(orientation = 'h', bgcolor ='#FFFFFF00'))%>%
+  config(displayModeBar = F) %>%
+  layout(xaxis=list(fixedrange=TRUE, showspikes = TRUE)) %>%
+  layout(yaxis=list(fixedrange=TRUE, showspikes = TRUE))
+
+# Diferença acumulada 12 meses
+# round(1-dados_desmatamento$`AREA ACUMULADA EM 1 ANO`[119]/dados_desmatamento$`AREA ACUMULADA EM 1 ANO`[107], 3)*-1
+# Diferença acumulada em 6 meses
+# round(1-dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[119]/dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[107], 3)*-1
+````
+## Considerações
+Nesta postagem foi possível reproduzir resultados que tem sido publicados na [seção de transparência florestal](https://imazon.org.br/categorias/transparencia-florestal/) no site do Imazon. Todas as análises realizadas podem ser acessadas clicando no botão **code** localizado ao lado superior direito dos gráficos apresentados.
+
 
 ## Referências
 [1] http://www.observatoriodoclima.eco.br/desmatamento-subiu-50-em-2019-indicam-alertas-inpe/
 
+[2] https://journals.openedition.org/confins/11580?lang=pt
 
-6833/4572
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+[3] http://g1.globo.com/jornal-nacional/noticia/2018/01/satelite-ajuda-monitorar-desmatamento-com-mais-precisao.html
