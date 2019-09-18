@@ -29,12 +29,14 @@ No site do [ImazonGeo](https://imazongeo.org.br/#/) estão disponíveis os dados
 ## Analisando os dados do SAD
 Os dados de desmatamento desponibilizados pelo SAD estão em formato *shapefile* e foi necessário algum trabalho computacional para juntar tudo em uma tabela única, já que os arquivos são separados mês a mês. Fiz o download de todos os meses compreendidos entre agosto de 2009 e julho de 2019, totalizando 10 anos de análise ou 120 meses. Por sorte temos o R, e todo o procedimento desenvolvido para compilação dos dados em uma tabela única está disponível em [meu repositório pessoal no GitHub](https://github.com/sergiocostafh/desmatamento_sad_imazon).
 
+Nesta postagem foi possível reproduzir resultados que tem sido publicados na [seção de transparência florestal](https://imazon.org.br/categorias/transparencia-florestal/) no site do Imazon. Todas as análises realizadas podem ser acessadas clicando no botão **código** localizado logo acima dos gráficos, no canto direito.
+
 Dada toda esta introdução, vamos por a mão na massa. Mas não sem antes recomendar que você clique **aqui** e entenda por que apresento os scripts de análises ao longo das postagens e a importância das análises replicáveis.
   
 Ao visualizar a série histórica dos dados mensais de desmatamento mapeado pelo SAD, alguns padrões já nos saltam aos olhos. O primeiro que podemos elencar é que o mês de julho de 2019 registrou o maior acúmulo de área desmatada em um mês para toda a série histórica, e isso já explica boa parte da discussão em torno do assunto levantada nas últimas semanas. Outro ponto importante é que há uma clara tendência na formação de picos ascendentes na taxa de desmatamento desde 2012.  Os picos ocorrem geralmente entre os meses de junho e julho, que coincide com o período de menor pluviosidade na região [2]. 
 
 ```{r, message=FALSE, warning=FALSE, fig.align='center',fig.width=8, warning=FALSE}
-# Importar a base de dados
+# Importar a base de dados do SAD
 dados_desmatamento <- read.table('dados_sad.txt')
 # Criar coluna Mês - Ano
 dados_desmatamento$`MES ANO`=as.Date(paste(dados_desmatamento$ANO,'-',dados_desmatamento$MES,'-01', sep=''))
@@ -116,9 +118,14 @@ ggplotly(ggplot(dados_desmatamento)+
 # Diferença acumulada em 6 meses
 # round(1-dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[119]/dados_desmatamento$`AREA ACUMULADA EM 6 MESES`[107], 3)*-1
 ````
-## Considerações
-Nesta postagem foi possível reproduzir resultados que tem sido publicados na [seção de transparência florestal](https://imazon.org.br/categorias/transparencia-florestal/) no site do Imazon. Todas as análises realizadas podem ser acessadas clicando no botão **code** localizado ao lado superior direito dos gráficos apresentados.
 
+O momento em que foi detectada a menor perda de cobertura florestal para o período de um ano se deu na metade de 2012, corroborando dados do PRODES que apontam que em 2012 o desmatamento na Amazônia atingiu seu mínimo histórico [4]. Tanto na série histórica do PRODES quando do Imazon a reversão da tendência de redução nas taxas de desmatamento ocorre após 2012, que coincide com a aprovação do novo Código Florestal ([lei 12.651, de 25 de maio de 2012](http://www.planalto.gov.br/ccivil_03/_Ato2011-2014/2012/Lei/L12651.htm)). Desde a sua aprovação, especialistas apontam que alguns pontos da lei contribuíram para o aumento do desmatamento, especialmente a anistia para quem desmatou até o ano de 2008 [4].
+
+## Conclusões
+A partir das análises realizadas, podemos conluir de maneira simples e objetiva que:
+* Em julho de 2019 a série de desmatamento detectado pelo Sistema de Alertas de Desmatamento do Imazon alcançou sua máxima histórica, considerando a cobertura vegetal primária perdida no período de um mês.
+* Há uma tendência de aumento nas taxas de desmatamento iniciada após o ano de 2012.
+* As análises sugerem que no início de 2020 poderemos ter uma nova máxima histórica para a área desmatada no período de 1 ano.
 
 ## Referências
 [1] http://www.observatoriodoclima.eco.br/desmatamento-subiu-50-em-2019-indicam-alertas-inpe/
@@ -126,3 +133,5 @@ Nesta postagem foi possível reproduzir resultados que tem sido publicados na [s
 [2] https://journals.openedition.org/confins/11580?lang=pt
 
 [3] http://g1.globo.com/jornal-nacional/noticia/2018/01/satelite-ajuda-monitorar-desmatamento-com-mais-precisao.html
+
+[4] https://www.noticiasagricolas.com.br/noticias/meio-ambiente/183880-na-folha-novo-codigo-florestal-contribuiu-para-aumento-no-desmatamento.html#.XYIZRShKjIU
